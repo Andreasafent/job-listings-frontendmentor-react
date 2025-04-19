@@ -7,29 +7,21 @@ import data from './data/data.json'
 
 function App() {
     const [filters, setFilters] = useState(JSON.parse(localStorage.getItem("filters")) || [])
-    // const [filteredListings, setFilteredListings] = useState(JSON.parse(localStorage.getItem("filters")) || [])
+    const [filteredListings, setFilteredListings] = useState(data)
 
     useEffect(() => {
-        localStorage.setItem("filters", JSON.stringify(filters))
+        localStorage.setItem("filters", JSON.stringify(filters));
 
-        // if (filters.length > 0) {
-        //     setFilteredListings(data.filter(item => {
-        //         return filters.some(filter => {
-        //             return item.languages.includes(filter) || item.tools.includes(filter)
-        //         })
-        //     }))
-        // }else{
-        //     setFilteredListings(data)
-        // }
-
+        if (filters.length > 0){
+            const filtered = data.filter(item=>{
+                const allSkills = [item.level, item.role, ...item.languages, ...item.tools]
+                return filters.every(filter => allSkills.includes(filter))
+            })
+            setFilteredListings(filtered)
+        }else{
+            setFilteredListings(data)
+        }
     }, [filters])
-
-    // useEffect(() => {
-    //     console.log(filteredListings)
-    // }, [filteredListings])
-
-    // console.log(filteredListings)
-
 
     const isMobile = useMediaQuery({ query: '(max-width: 376px)' });
 
@@ -58,7 +50,7 @@ function App() {
 
 
                 {
-                    data.map((item) => (
+                    filteredListings.map((item) => (
                         <ListingItem
                             key={item.id}
                             company={item.company}
