@@ -6,9 +6,32 @@ import FiltersComponent from './components/FiltersComponent'
 import data from './data/data.json'
 
 function App() {
+    const [filters, setFilters] = useState(JSON.parse(localStorage.getItem("filters")) || [])
+    // const [filteredListings, setFilteredListings] = useState(JSON.parse(localStorage.getItem("filters")) || [])
+
+    useEffect(() => {
+        localStorage.setItem("filters", JSON.stringify(filters))
+
+        // if (filters.length > 0) {
+        //     setFilteredListings(data.filter(item => {
+        //         return filters.some(filter => {
+        //             return item.languages.includes(filter) || item.tools.includes(filter)
+        //         })
+        //     }))
+        // }else{
+        //     setFilteredListings(data)
+        // }
+
+    }, [filters])
+
+    // useEffect(() => {
+    //     console.log(filteredListings)
+    // }, [filteredListings])
+
+    // console.log(filteredListings)
 
 
-    const isMobile = useMediaQuery({ query: '(max-width: 376px)' })
+    const isMobile = useMediaQuery({ query: '(max-width: 376px)' });
 
     return (
         <>
@@ -24,8 +47,15 @@ function App() {
             </header>
 
             <main className="px-4 py-10 bg-[#effafa] flex flex-col gap-10 min-h-[75vh]">
+                {
+                    filters.length > 0 && (
+                        <FiltersComponent
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
+                    )
+                }
 
-                {/* <FiltersComponent /> */}
 
                 {
                     data.map((item) => (
@@ -35,14 +65,11 @@ function App() {
                             logo={item.logo}
                             isNew={item.new}
                             featured={item.featured}
+                            details={[item.postedAt, item.contract, item.location]}
                             position={item.position}
-                            role={item.role}
-                            level={item.level}
-                            postedAt={item.postedAt}
-                            contract={item.contract}
-                            location={item.location}
-                            languages={[...item.languages, ...item.tools]}
-                            // tools={item.tools}
+                            skills={[item.level, item.role, ...item.languages, ...item.tools]}
+                            filters={filters}
+                            setFilters={setFilters}
                         />
                     ))
                 }

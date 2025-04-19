@@ -1,6 +1,7 @@
-import Languages from "./Languages";
+import React, { useEffect } from "react";
+import Skills from "./Skills";
 
-function ListingItem({ company, logo, isNew, featured, position, role, level, postedAt, contract, location, languages }) {
+function ListingItem({ company, logo, isNew, featured, position, details, skills, filters, setFilters }) {
     return (
         <section className={`w-full shadow-lg bg-white rounded-md border-[#5ba4a4] p-4 flex flex-col md:flex-row md:items-center md:justify-between md:p-6 ${featured && "border-l-6"}`}>
             <div className="mt-[-2.1rem] flex flex-col gap-2 border-b-1 border-[#7b8e8e] pb-4 md:flex-row md:border-b-0 md:items-center md:m-0 md:p-0 md:gap-4">
@@ -24,26 +25,33 @@ function ListingItem({ company, logo, isNew, featured, position, role, level, po
                     </div>
                     <p className="font-bold text-xs md:text-base cursor-pointer hover:text-[#5ba4a4]">{position}</p>
                     <div className="flex gap-2 items-center">
-                        <p className="text-xs text-[#7b8e8e]">{postedAt}</p>
-                        <span className="text-xs text-[#7b8e8e]">•</span>
-                        <p className="text-xs text-[#7b8e8e]">{contract}</p>
-                        <span className="text-xs text-[#7b8e8e]">•</span>
-                        <p className="text-xs text-[#7b8e8e]">{location}</p>
+                        {
+                            details.map((item, index, array) => (
+                                <React.Fragment key={item}>
+                                    <p className="text-xs text-[#7b8e8e]">{item}</p>
+                                    {
+                                        index !== array.length - 1 && (
+                                            <span className="text-xs text-[#7b8e8e]">•</span>
+                                        )
+                                    }
+                                </React.Fragment>
+                            ))
+                        }
+
                     </div>
                 </div>
             </div>
             <div className="flex gap-2 pt-4 flex-wrap md:p-0">
-                {languages.l}
-
                 {
-                    languages?.map((language) => (
-                        <Languages
-                            key={language}
-                            language={language}
+                    skills.map((skill) => (
+                        <Skills
+                            key={skill}
+                            skill={skill}
+                            filters={filters}
+                            setFilters={setFilters}
                         />
                     ))
                 }
-                
             </div>
         </section>
     )
